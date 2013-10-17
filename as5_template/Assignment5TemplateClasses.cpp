@@ -21,6 +21,42 @@ void Vertex::Normalize()
 	h = 1;
 }
 
+Vertex Vertex::operator*(float scalar) {
+	Vertex temp = Vertex();
+	temp.x = x * scalar;
+	temp.y = y * scalar;
+	temp.z = z * scalar;
+	temp.h = h * scalar;
+	return temp;
+}
+
+Vertex Vertex::operator/(float scalar) {
+	Vertex temp = Vertex();
+	temp.x = x * scalar;
+	temp.y = y * scalar;
+	temp.z = z * scalar;
+	temp.h = h * scalar;
+	return temp;
+}
+
+Vertex Vertex::operator+(const Vertex &vertex) {
+	Vertex temp = Vertex();
+	temp.x = x + vertex.x;
+	temp.y = y + vertex.y;
+	temp.z = z + vertex.z;
+	temp.h = h + vertex.h;
+	return temp;
+}
+
+Vertex Vertex::operator-(const Vertex &vertex) {
+	Vertex temp = Vertex();
+	temp.x = x - vertex.x;
+	temp.y = y - vertex.y;
+	temp.z = z - vertex.z;
+	temp.h = h - vertex.h;
+	return temp;
+}
+
 Object::Object()
 {
 	pBoundingBox = new Vertex[8];

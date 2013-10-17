@@ -5,6 +5,10 @@ class Vertex
 public:
 	Vertex();
 	void Normalize();
+	Vertex operator*(float scalar);
+	Vertex operator/(float scalar);
+	Vertex operator+(const Vertex &vertex);
+	Vertex operator-(const Vertex &vertex);
 	float x, y, z, h;
 };
 
