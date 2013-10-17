@@ -13,6 +13,10 @@
 
 using namespace std;
 
+#define NEARPLANEMIN 1.0
+#define NEARPLANEMAX 1.0
+#define PLANEDELTA   0.1
+
 // User Interface Variables
 int MouseX = 0;
 int MouseY = 0;
@@ -24,6 +28,8 @@ bool ShowAxes = true;
 bool SelectionMode = false;
 int SelectedObject = 0;
 bool ShowBoundingBoxes = true;
+float NearPlane = NEARPLANEMIN;
+float FarPlane = NearPlane + NEARPLANEMAX;
 int WindowWidth = 300, WindowHeight = 300;
 
 // Scene Content Variables
@@ -214,12 +220,21 @@ void MotionFunc(int x, int y)
 	if(MouseMiddle && SelectionMode)
 	{
 		// Move the Near Plane
-		// ADD CODE HERE
+		if (MouseY > y) NearPlane += PLANEDELTA;
+		if (MouseY < y) NearPlane -= PLANEDELTA;
+		NearPlane = (NearPlane >= NEARPLANEMIN) ? (NearPlane < FarPlane - NEARPLANEMAX) ?
+			NearPlane :
+			FarPlane - NEARPLANEMAX :
+			NEARPLANEMIN;
 	}
 	if(MouseRight && SelectionMode)
 	{
 		// Move the Far Plane
-		// ADD CODE HERE
+		if (MouseY > y) FarPlane += PLANEDELTA;
+		if (MouseY < y) FarPlane -= PLANEDELTA;
+		FarPlane = (FarPlane >= NearPlane + NEARPLANEMAX) ?
+			FarPlane :
+			NearPlane + NEARPLANEMAX;
 	}
     
 	MouseX = x;
