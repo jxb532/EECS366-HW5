@@ -78,3 +78,11 @@ public:
 Vertex Transform(float* matrix, Vertex& point);
 int Select(int previous, Scene* pScene, Camera* pCamera, float x, float y);
 Vertex* ClipPolygon(int count, Vertex* input, int* out_count);
+Vertex* ClipLeft(int count, Vertex* input, int* out_count);
+Vertex* ClipRight(int count, Vertex* input, int* out_count);
+Vertex* ClipBottom(int count, Vertex* input, int* out_count);
+Vertex* ClipTop(int count, Vertex* input, int* out_count);
+Vertex* ClipYon(int count, Vertex* input, int* out_count);
+Vertex* ClipHither(int count, Vertex* input, int* out_count);
+float getAlpha(float t1, float t2, float w1, float w2);
+Vertex getIntersection(Vertex p1, Vertex p2, float alpha);

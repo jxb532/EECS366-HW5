@@ -28,8 +28,6 @@ bool ShowAxes = true;
 bool SelectionMode = false;
 int SelectedObject = 0;
 bool ShowBoundingBoxes = true;
-float NearPlane = NEARPLANEMIN;
-float FarPlane = NearPlane + NEARPLANEMAX;
 int WindowWidth = 300, WindowHeight = 300;
 
 // Scene Content Variables
@@ -124,8 +122,8 @@ void DisplayFunc() {
 			glEnd();
 
 			delete [] input;
-			input = NULL;
 			delete [] output;
+			input = NULL;
 			output = NULL;
 		}
 
@@ -218,20 +216,20 @@ void MotionFunc(int x, int y) {
 
 	if(MouseMiddle && SelectionMode) {
 		// Move the Near Plane
-		if (MouseY > y) NearPlane += PLANEDELTA;
-		if (MouseY < y) NearPlane -= PLANEDELTA;
-		NearPlane = (NearPlane >= NEARPLANEMIN) ? (NearPlane < FarPlane - NEARPLANEMAX) ?
-			NearPlane :
-			FarPlane - NEARPLANEMAX :
+		if (MouseY > y) pDisplayCamera->NearPlane += PLANEDELTA;
+		if (MouseY < y) pDisplayCamera->NearPlane -= PLANEDELTA;
+		pDisplayCamera->NearPlane = (pDisplayCamera->NearPlane >= NEARPLANEMIN) ? (pDisplayCamera->NearPlane < pDisplayCamera->FarPlane - NEARPLANEMAX) ?
+			pDisplayCamera->NearPlane :
+			pDisplayCamera->FarPlane - NEARPLANEMAX :
 			NEARPLANEMIN;
 	}
 	if(MouseRight && SelectionMode) {
 		// Move the Far Plane
-		if (MouseY > y) FarPlane += PLANEDELTA;
-		if (MouseY < y) FarPlane -= PLANEDELTA;
-		FarPlane = (FarPlane >= NearPlane + NEARPLANEMAX) ?
-			FarPlane :
-			NearPlane + NEARPLANEMAX;
+		if (MouseY > y) pDisplayCamera->FarPlane += PLANEDELTA;
+		if (MouseY < y) pDisplayCamera->FarPlane -= PLANEDELTA;
+		pDisplayCamera->FarPlane = (pDisplayCamera->FarPlane >= pDisplayCamera->NearPlane + NEARPLANEMAX) ?
+			pDisplayCamera->FarPlane :
+			pDisplayCamera->NearPlane + NEARPLANEMAX;
 	}
     
 	MouseX = x;

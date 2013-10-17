@@ -540,7 +540,8 @@ Vertex* ClipLeft(int count, Vertex* input, int* out_count)
 
 		// if p1 outside, p2 inside, add intersection & p2
 		if (p1.x < -p1.h && p2.x >= -p2.h) {
-			float alpha = getAlpha(p1.x, p2.x, -p1.h, -p2.h);
+			//float alpha = getAlpha(p1.x, p2.x, -p1.h, -p2.h);
+			float alpha = getAlpha(-p1.x, -p2.x, p1.h, p2.h);
 			Vertex intersect = getIntersection(p1, p2, alpha);
 
 			output[outIndex] = intersect;
@@ -556,7 +557,8 @@ Vertex* ClipLeft(int count, Vertex* input, int* out_count)
 
 		// if p1 inside, p2 outside, add intersection only
 		} else if (p1.x >= -p1.h && p2.x < -p2.h) {
-			float alpha = getAlpha(p1.x, p2.x, -p1.h, -p2.h);
+			//float alpha = getAlpha(p1.x, p2.x, -p1.h, -p2.h);
+			float alpha = getAlpha(-p1.x, -p2.x, p1.h, p2.h);
 			Vertex intersect = getIntersection(p1, p2, alpha);
 
 			output[outIndex] = intersect;
@@ -620,7 +622,8 @@ Vertex* ClipBottom(int count, Vertex* input, int* out_count)
 
 		// if p1 outside, p2 inside, add intersection & p2
 		if (p1.y < -p1.h && p2.y >= -p2.h) {
-			float alpha = getAlpha(p1.y, p2.y, -p1.h, -p2.h);
+			//float alpha = getAlpha(p1.y, p2.y, -p1.h, -p2.h);
+			float alpha = getAlpha(-p1.y, -p2.y, p1.h, p2.h);
 			Vertex intersect = getIntersection(p1, p2, alpha);
 
 			output[outIndex] = intersect;
@@ -636,7 +639,8 @@ Vertex* ClipBottom(int count, Vertex* input, int* out_count)
 
 		// if p1 inside, p2 outside, add intersection only
 		} else if (p1.y >= -p1.h && p2.y < -p2.h) {
-			float alpha = getAlpha(p1.y, p2.y, -p1.h, -p2.h);
+			//float alpha = getAlpha(p1.y, p2.y, -p1.h, -p2.h);
+			float alpha = getAlpha(-p1.y, -p2.y, p1.h, p2.h);
 			Vertex intersect = getIntersection(p1, p2, alpha);
 
 			output[outIndex] = intersect;
@@ -699,8 +703,9 @@ Vertex* ClipYon(int count, Vertex* input, int* out_count)
 		Vertex p2 = input[(i+1) % count];
 
 		// if p1 outside, p2 inside, add intersection & p2
-		if (p1.z < 0 && p2.z >= 0) {
-			float alpha = getAlpha(p1.z, p2.z, 0, 0);
+		if (p1.z < -p1.h && p2.z >= -p2.h) {
+			//float alpha = getAlpha(p1.z, p2.z, -p1.h, -p2.h);
+			float alpha = getAlpha(-p1.z, -p2.z, p1.h, p2.h);
 			Vertex intersect = getIntersection(p1, p2, alpha);
 
 			output[outIndex] = intersect;
@@ -710,13 +715,14 @@ Vertex* ClipYon(int count, Vertex* input, int* out_count)
 			++outIndex;
 
 		// if p1, p2 inside, add p2
-		} else if (p1.z >= 0 && p2.z >= 0) {
+		} else if (p1.z >= -p1.h && p2.z >= -p2.h) {
 			output[outIndex] = p2;
 			++outIndex;
 
 		// if p1 inside, p2 outside, add intersection only
-		} else if (p1.z >= 0 && p2.z < 0) {
-			float alpha = getAlpha(p1.z, p2.z, 0, 0);
+		} else if (p1.z >= -p1.h && p2.z < -p2.h) {
+			//float alpha = getAlpha(p1.z, p2.z, -p1.h, -p2.h);
+			float alpha = getAlpha(-p1.z, -p2.z, p1.h, p2.h);
 			Vertex intersect = getIntersection(p1, p2, alpha);
 
 			output[outIndex] = intersect;
@@ -769,12 +775,14 @@ Vertex* ClipHither(int count, Vertex* input, int* out_count)
 	return output;
 }
 
+//float getAlpha(float t1, float t2, float w1, float w2) {
+//	return (t1 - w1) / (t1 - w1 - (t2 - w2));
+//}
+
 float getAlpha(float t1, float t2, float w1, float w2) {
-	return (t1 - w1) / (t1 - w1 - (t2 - w2));
+	return (w1 - t1) / ((w1 - t1) - (w2 - t2));
 }
 
-
-// TODO fixie fixie
 Vertex getIntersection(Vertex p1, Vertex p2, float alpha) {
 	//Vertex* part1 = p2 * alpha;
 	//Vertex* part2 = p1 * (1.0 - alpha);
@@ -786,5 +794,8 @@ Vertex getIntersection(Vertex p1, Vertex p2, float alpha) {
 
 	//delete part1, part2, part3, part4, part5, part6;
 	//return *part7;
-	return p1;
+
+	//Vertex intersect = (p2 * alpha) + (p1 * (1.0 - alpha)) - p1 + ((p2 - p1) * alpha);
+	Vertex intersect = p1 + ((p2 - p1) * alpha);
+	return intersect;
 }
