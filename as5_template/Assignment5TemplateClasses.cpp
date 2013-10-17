@@ -481,9 +481,274 @@ int Select(int previous, Scene* pScene, Camera* pCamera, float x, float y)
 // ADD CODE HERE: dummy function only copies polygons
 Vertex* ClipPolygon(int count, Vertex* input, int* out_count)
 {
+	Vertex* postLeft = ClipLeft(count, input, out_count);
+	Vertex* postRight = ClipRight(*out_count, postLeft, out_count);
+	Vertex* postBottom = ClipBottom(*out_count, postRight, out_count);
+	Vertex* postTop = ClipTop(*out_count, postBottom, out_count);
+	Vertex* postYon = ClipYon(*out_count, postTop, out_count);
+	Vertex* postHither = ClipHither(*out_count, postYon, out_count);
+
+	delete postLeft, postRight, postBottom, postTop, postYon;
+
+	return postHither;
+}
+
+Vertex* ClipLeft(int count, Vertex* input, int* out_count)
+{
 	Vertex* output = new Vertex[count];
-	for(int i = 0; i < count; i++)
-		output[i] = input[i];
-	*out_count = count;
+	int outIndex = 0;
+
+	for (int i = 0; i < count; i++) {
+		Vertex p1 = input[i];
+		Vertex p2 = input[(i+1) % count];
+
+		// if p1 outside, p2 inside, add intersection & p2
+		if (p1.x < -p1.h && p2.x >= -p2.h) {
+			float alpha = getAlpha(p1.x, p2.x, -p1.h, -p2.h);
+			Vertex intersect = getIntersection(p1, p2, alpha);
+
+			output[outIndex] = intersect;
+			++outIndex;
+			
+			output[outIndex] = p2;
+			++outIndex;
+
+		// if p1, p2 inside, add p2
+		} else if (p1.x >= -p1.h && p2.x >= -p2.h) {
+			output[outIndex] = p2;
+			++outIndex;
+
+		// if p1 inside, p2 outside, add intersection only
+		} else if (p1.x >= -p1.h && p2.x < -p2.h) {
+			float alpha = getAlpha(p1.x, p2.x, -p1.h, -p2.h);
+			Vertex intersect = getIntersection(p1, p2, alpha);
+
+			output[outIndex] = intersect;
+			++outIndex;
+		}
+
+	}
+
+	*out_count = outIndex;
 	return output;
+}
+
+Vertex* ClipRight(int count, Vertex* input, int* out_count)
+{
+	Vertex* output = new Vertex[count];
+	int outIndex = 0;
+
+	for (int i = 0; i < count; i++) {
+		Vertex p1 = input[i];
+		Vertex p2 = input[(i+1) % count];
+
+		// if p1 outside, p2 inside, add intersection & p2
+		if (p1.x > p1.h && p2.x <= p2.h) {
+			float alpha = getAlpha(p1.x, p2.x, p1.h, p2.h);
+			Vertex intersect = getIntersection(p1, p2, alpha);
+
+			output[outIndex] = intersect;
+			++outIndex;
+			
+			output[outIndex] = p2;
+			++outIndex;
+
+		// if p1, p2 inside, add p2
+		} else if (p1.x <= p1.h && p2.x <= p2.h) {
+			output[outIndex] = p2;
+			++outIndex;
+
+		// if p1 inside, p2 outside, add intersection only
+		} else if (p1.x <= p1.h && p2.x > p2.h) {
+			float alpha = getAlpha(p1.x, p2.x, p1.h, p2.h);
+			Vertex intersect = getIntersection(p1, p2, alpha);
+
+			output[outIndex] = intersect;
+			++outIndex;
+		}
+
+	}
+
+	*out_count = outIndex;
+	return output;
+}
+
+Vertex* ClipBottom(int count, Vertex* input, int* out_count)
+{
+	Vertex* output = new Vertex[count];
+	int outIndex = 0;
+
+	for (int i = 0; i < count; i++) {
+		Vertex p1 = input[i];
+		Vertex p2 = input[(i+1) % count];
+
+		// if p1 outside, p2 inside, add intersection & p2
+		if (p1.y < -p1.h && p2.y >= -p2.h) {
+			float alpha = getAlpha(p1.y, p2.y, -p1.h, -p2.h);
+			Vertex intersect = getIntersection(p1, p2, alpha);
+
+			output[outIndex] = intersect;
+			++outIndex;
+			
+			output[outIndex] = p2;
+			++outIndex;
+
+		// if p1, p2 inside, add p2
+		} else if (p1.y >= -p1.h && p2.y >= -p2.h) {
+			output[outIndex] = p2;
+			++outIndex;
+
+		// if p1 inside, p2 outside, add intersection only
+		} else if (p1.y >= -p1.h && p2.y < -p2.h) {
+			float alpha = getAlpha(p1.y, p2.y, -p1.h, -p2.h);
+			Vertex intersect = getIntersection(p1, p2, alpha);
+
+			output[outIndex] = intersect;
+			++outIndex;
+		}
+
+	}
+
+	*out_count = outIndex;
+	return output;
+}
+
+Vertex* ClipTop(int count, Vertex* input, int* out_count)
+{
+	Vertex* output = new Vertex[count];
+	int outIndex = 0;
+
+	for (int i = 0; i < count; i++) {
+		Vertex p1 = input[i];
+		Vertex p2 = input[(i+1) % count];
+
+		// if p1 outside, p2 inside, add intersection & p2
+		if (p1.y > p1.h && p2.y <= p2.h) {
+			float alpha = getAlpha(p1.y, p2.y, p1.h, p2.h);
+			Vertex intersect = getIntersection(p1, p2, alpha);
+
+			output[outIndex] = intersect;
+			++outIndex;
+			
+			output[outIndex] = p2;
+			++outIndex;
+
+		// if p1, p2 inside, add p2
+		} else if (p1.y <= p1.h && p2.y <= p2.h) {
+			output[outIndex] = p2;
+			++outIndex;
+
+		// if p1 inside, p2 outside, add intersection only
+		} else if (p1.y <= p1.h && p2.y > p2.h) {
+			float alpha = getAlpha(p1.y, p2.y, p1.h, p2.h);
+			Vertex intersect = getIntersection(p1, p2, alpha);
+
+			output[outIndex] = intersect;
+			++outIndex;
+		}
+
+	}
+
+	*out_count = outIndex;
+	return output;
+}
+
+Vertex* ClipYon(int count, Vertex* input, int* out_count)
+{
+	Vertex* output = new Vertex[count];
+	int outIndex = 0;
+
+	for (int i = 0; i < count; i++) {
+		Vertex p1 = input[i];
+		Vertex p2 = input[(i+1) % count];
+
+		// if p1 outside, p2 inside, add intersection & p2
+		if (p1.z < 0 && p2.z >= 0) {
+			float alpha = getAlpha(p1.z, p2.z, 0, 0);
+			Vertex intersect = getIntersection(p1, p2, alpha);
+
+			output[outIndex] = intersect;
+			++outIndex;
+			
+			output[outIndex] = p2;
+			++outIndex;
+
+		// if p1, p2 inside, add p2
+		} else if (p1.z >= 0 && p2.z >= 0) {
+			output[outIndex] = p2;
+			++outIndex;
+
+		// if p1 inside, p2 outside, add intersection only
+		} else if (p1.z >= 0 && p2.z < 0) {
+			float alpha = getAlpha(p1.z, p2.z, 0, 0);
+			Vertex intersect = getIntersection(p1, p2, alpha);
+
+			output[outIndex] = intersect;
+			++outIndex;
+		}
+
+	}
+
+	*out_count = outIndex;
+	return output;
+}
+
+Vertex* ClipHither(int count, Vertex* input, int* out_count)
+{
+	Vertex* output = new Vertex[count];
+	int outIndex = 0;
+
+	for (int i = 0; i < count; i++) {
+		Vertex p1 = input[i];
+		Vertex p2 = input[(i+1) % count];
+
+		// if p1 outside, p2 inside, add intersection & p2
+		if (p1.z > p1.h && p2.z <= p2.h) {
+			float alpha = getAlpha(p1.z, p2.z, p1.h, p2.h);
+			Vertex intersect = getIntersection(p1, p2, alpha);
+
+			output[outIndex] = intersect;
+			++outIndex;
+			
+			output[outIndex] = p2;
+			++outIndex;
+
+		// if p1, p2 inside, add p2
+		} else if (p1.z <= p1.h && p2.z <= p2.h) {
+			output[outIndex] = p2;
+			++outIndex;
+
+		// if p1 inside, p2 outside, add intersection only
+		} else if (p1.z <= p1.h && p2.z > p2.h) {
+			float alpha = getAlpha(p1.z, p2.z, p1.h, p2.h);
+			Vertex intersect = getIntersection(p1, p2, alpha);
+
+			output[outIndex] = intersect;
+			++outIndex;
+		}
+
+	}
+
+	*out_count = outIndex;
+	return output;
+}
+
+float getAlpha(float t1, float t2, float w1, float w2) {
+	return (t1 - w1) / (t1 - w1 - (t2 - w2));
+}
+
+
+// TODO fixie fixie
+Vertex getIntersection(Vertex p1, Vertex p2, float alpha) {
+	//Vertex* part1 = p2 * alpha;
+	//Vertex* part2 = p1 * (1.0 - alpha);
+	//Vertex* part3 = p2 - p1;
+	//Vertex* part4 = part3 * alpha;
+	//Vertex* part5 = part1 + part2;
+	//Vertex* part6 = part5 - p1;
+	//Vertex* part7 = part6 + part4;
+
+	//delete part1, part2, part3, part4, part5, part6;
+	//return *part7;
+	return p1;
 }
