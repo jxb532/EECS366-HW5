@@ -222,6 +222,8 @@ void MotionFunc(int x, int y) {
 			pDisplayCamera->NearPlane :
 			pDisplayCamera->FarPlane - NEARPLANEMAX :
 			NEARPLANEMIN;
+		printf("near plane: %d\tfar plane: %d\n", pDisplayCamera->NearPlane, pDisplayCamera->FarPlane);
+
 	}
 	if(MouseRight && SelectionMode) {
 		// Move the Far Plane
@@ -230,6 +232,7 @@ void MotionFunc(int x, int y) {
 		pDisplayCamera->FarPlane = (pDisplayCamera->FarPlane >= pDisplayCamera->NearPlane + NEARPLANEMAX) ?
 			pDisplayCamera->FarPlane :
 			pDisplayCamera->NearPlane + NEARPLANEMAX;
+		printf("near plane: %d\tfar plane: %d\n", pDisplayCamera->NearPlane, pDisplayCamera->FarPlane);
 	}
     
 	MouseX = x;
