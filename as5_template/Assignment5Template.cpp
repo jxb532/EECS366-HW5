@@ -1,5 +1,7 @@
-// Assignment5Template.cpp
-// Computer Graphics - EECS 366/466 - Spring 2005
+/* Wes Rupert - wesrupert@outlook.com (wkr3)  *
+ * Josh Braun - jxb532@case.edu (jxb532)      *
+ * Case Western Reserve University - EECS 366 *
+ * 10/18/2013 - Assignment 5                  */
 
 // Allow use of M_PI constant
 #define _USE_MATH_DEFINES
@@ -15,7 +17,7 @@ using namespace std;
 
 #define NEARPLANEMIN 1.0
 #define NEARPLANEMAX 1.0
-#define PLANEDELTA   0.1
+#define PLANEDELTA   0.01
 
 // User Interface Variables
 int MouseX = 0;
@@ -216,19 +218,17 @@ void MotionFunc(int x, int y) {
 
 	if(MouseMiddle && SelectionMode) {
 		// Move the Near Plane
-		if (MouseY > y) pDisplayCamera->NearPlane += PLANEDELTA;
-		if (MouseY < y) pDisplayCamera->NearPlane -= PLANEDELTA;
-		pDisplayCamera->NearPlane = (pDisplayCamera->NearPlane >= NEARPLANEMIN) ? (pDisplayCamera->NearPlane < pDisplayCamera->FarPlane - NEARPLANEMAX) ?
+		pDisplayCamera->NearPlane += (MouseY - y) * PLANEDELTA;
+		pDisplayCamera->NearPlane = (pDisplayCamera->NearPlane >= NEARPLANEMIN) ? ((pDisplayCamera->NearPlane < pDisplayCamera->FarPlane - NEARPLANEMAX) ?
 			pDisplayCamera->NearPlane :
-			pDisplayCamera->FarPlane - NEARPLANEMAX :
+			pDisplayCamera->FarPlane - NEARPLANEMAX) :
 			NEARPLANEMIN;
 		printf("near plane: %f\tfar plane: %f\n", pDisplayCamera->NearPlane, pDisplayCamera->FarPlane);
 
 	}
 	if(MouseRight && SelectionMode) {
 		// Move the Far Plane
-		if (MouseY > y) pDisplayCamera->FarPlane += PLANEDELTA;
-		if (MouseY < y) pDisplayCamera->FarPlane -= PLANEDELTA;
+		pDisplayCamera->FarPlane += (MouseY - y) * PLANEDELTA;
 		pDisplayCamera->FarPlane = (pDisplayCamera->FarPlane >= pDisplayCamera->NearPlane + NEARPLANEMAX) ?
 			pDisplayCamera->FarPlane :
 			pDisplayCamera->NearPlane + NEARPLANEMAX;
