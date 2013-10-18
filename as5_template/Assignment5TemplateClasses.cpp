@@ -524,14 +524,14 @@ Vertex* ClipPolygon(int count, Vertex* input, int* out_count)
 	Vertex* postYon = ClipYon(*out_count, postTop, out_count);
 	Vertex* postHither = ClipHither(*out_count, postYon, out_count);
 
-	delete postLeft, postRight, postBottom, postTop, postYon;
+	delete [] postLeft, postRight, postBottom, postTop, postYon;
 
 	return postHither;
 }
 
 Vertex* ClipLeft(int count, Vertex* input, int* out_count)
 {
-	Vertex* output = new Vertex[count];
+	Vertex* output = new Vertex[12];
 	int outIndex = 0;
 
 	for (int i = 0; i < count; i++) {
@@ -573,7 +573,7 @@ Vertex* ClipLeft(int count, Vertex* input, int* out_count)
 
 Vertex* ClipRight(int count, Vertex* input, int* out_count)
 {
-	Vertex* output = new Vertex[count];
+	Vertex* output = new Vertex[12];
 	int outIndex = 0;
 
 	for (int i = 0; i < count; i++) {
@@ -613,7 +613,7 @@ Vertex* ClipRight(int count, Vertex* input, int* out_count)
 
 Vertex* ClipBottom(int count, Vertex* input, int* out_count)
 {
-	Vertex* output = new Vertex[count];
+	Vertex* output = new Vertex[12];
 	int outIndex = 0;
 
 	for (int i = 0; i < count; i++) {
@@ -655,7 +655,7 @@ Vertex* ClipBottom(int count, Vertex* input, int* out_count)
 
 Vertex* ClipTop(int count, Vertex* input, int* out_count)
 {
-	Vertex* output = new Vertex[count];
+	Vertex* output = new Vertex[12];
 	int outIndex = 0;
 
 	for (int i = 0; i < count; i++) {
@@ -695,7 +695,7 @@ Vertex* ClipTop(int count, Vertex* input, int* out_count)
 
 Vertex* ClipYon(int count, Vertex* input, int* out_count)
 {
-	Vertex* output = new Vertex[count];
+	Vertex* output = new Vertex[12];
 	int outIndex = 0;
 
 	for (int i = 0; i < count; i++) {
@@ -737,7 +737,7 @@ Vertex* ClipYon(int count, Vertex* input, int* out_count)
 
 Vertex* ClipHither(int count, Vertex* input, int* out_count)
 {
-	Vertex* output = new Vertex[count];
+	Vertex* output = new Vertex[12];
 	int outIndex = 0;
 
 	for (int i = 0; i < count; i++) {
